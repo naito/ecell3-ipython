@@ -37,6 +37,9 @@ import ecell.ecs
 import ecell.emc
 from ecell.Session import Session, createScriptContext
 
+def FullID_matcher( prefix, session ):
+    return [ id for id in session.getModelEntityList() if id.startswith( prefix ) ]
+
 def load_ipython_extension( ipython ):
     # The `ipython` argument is the currently active `InteractiveShell`
     # instance, which can be used in any way. This allows you to register
@@ -44,8 +47,15 @@ def load_ipython_extension( ipython ):
     
     aSimulator = ecell.emc.Simulator()
     aSimulator.setDMSearchPath( aSimulator.DM_SEARCH_PATH_SEPARATOR.join( ecell.config.dm_path ) )
+    aSession = Session( aSimulator )
     
-    ipython.push( createScriptContext( Session( aSimulator ), {} ) )
+    ipython.push( createScriptContext( aSession, {} ) )
+    
+    def FullID_completer( self, event ):
+        # Completer for createLoggerStub
+        return FullID_matcher( event.symbol, aSession )
+    
+    ipython.set_hook('complete_command', FullID_completer, str_key = 'createLoggerStub')
 
 
 def unload_ipython_extension( ipython ):
