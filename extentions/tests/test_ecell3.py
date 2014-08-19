@@ -32,3 +32,57 @@ END_HEADER
  E-Cell Project.
 """
 
+%load_ext ecell3
+
+sim = theSimulator
+rootSys = sim.getEntity('System::/')
+DE1 = sim.createStepper('FixedODE1Stepper','DE1')
+
+rootSys.StepperID = 'DE1'
+
+SIZE = sim.createVariable('Variable')
+SIZE.ID = 'SIZE'
+SIZE.Value = 1e-18
+
+S = sim.createVariable('Variable')
+S.ID = 'S'
+S.Value = 1000000
+
+P = sim.createVariable('Variable')
+P.ID = 'P'
+P.Value = 0
+
+E = sim.createVariable('Variable')
+E.ID = 'E'
+E.Value = 1000
+
+P_E = sim.createProcess('MichaelisUniUniFluxProcess')
+P_E.ID = 'E'
+P_E.KmS = 1
+P_E.KcF = 10
+
+P_E.VariableReferenceList = (( 'S0', ':/:S', -1 ),( 'P0', ':/:P', 1 ),( 'C0', ':/:E', 0 ))
+
+rootSys.registerEntity( SIZE )
+rootSys.registerEntity( S )
+rootSys.registerEntity( P )
+rootSys.registerEntity( E )
+rootSys.registerEntity( P_E )
+
+S_Logger = createLoggerStub( 'Variable:/:S:Value' )
+S_Logger.create()
+S_Stub = createEntityStub( 'Variable:/:S' )
+
+getCurrentTime()
+S.Value
+# S.MolarConc    ## can't get SIZE at t = 0
+S.getProperty( 'Value' )
+# S.getProperty( 'MolarConc' )    ## can't get SIZE at t = 0
+
+sim.run(1000)
+
+getCurrentTime()
+S.Value
+S.MolarConc
+S.getProperty( 'Value' )
+S.getProperty( 'MolarConc' )
