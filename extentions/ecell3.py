@@ -37,6 +37,10 @@ import ecell.ecs
 import ecell.emc
 from ecell.Session import Session, createScriptContext
 
+Session_method_with_arg_list = [ createEntityStub, createLoggerStub, createStepperStub, loadModel, message, run, saveLoggerData, saveModel, setEntityProperty, setEventChecker, setEventHandler, setMessageMethod, step ]
+
+Session_method_no_arg_list = [ createLogger, getCurrentTime, getEntityList, getEntityProperty, getEntityPropertyAttributes, getLoggerList, getModelEntityList, getNextEvent, getProcessList, getStepperList, getSystemList, getSystemPathList, getVariableList, plainMessageMethod, stop ]
+
 def FullID_matcher( event, session ):
     prefix = event.line.split( "'" )[ -1 ]
     prefix = prefix.split( '"' )[ -1 ]
@@ -55,12 +59,18 @@ def load_ipython_extension( ipython ):
     
     def FullID_completer( self, event ):
         # Completer for createLoggerStub
-        
         return FullID_matcher( event, aSession )
     
-    # def Session_method_completer( self, event ):
+    def both_parentheses_completer( self, event ):
+        return [ '()' ]
     
-    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"][\w\/\:]*')
+    def open_parenthesis_completer( self, event ):
+        return [ '(' ]
+    
+    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createEntityStub\(\s*[\'\"]')
+    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
+    
+    ipython.set_hook('complete_command', open_parenthesis_completer, re_key = r'.*createLoggerStub')
 
 
 def unload_ipython_extension( ipython ):
