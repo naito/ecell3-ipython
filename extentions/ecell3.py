@@ -60,7 +60,7 @@ def load_ipython_extension( ipython ):
     
     # def Session_method_completer( self, event ):
     
-    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
+    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"][\w\/\:]*')
 
 
 def unload_ipython_extension( ipython ):
