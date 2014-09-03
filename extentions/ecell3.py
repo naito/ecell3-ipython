@@ -55,7 +55,7 @@ def load_ipython_extension( ipython ):
         # Completer for createLoggerStub
         return FullID_matcher( event.symbol, aSession )
     
-    ipython.set_hook('complete_command', FullID_completer, re_key = r'createLoggerStub')
+    ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub')
 
 
 def unload_ipython_extension( ipython ):
