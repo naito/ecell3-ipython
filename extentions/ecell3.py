@@ -37,7 +37,9 @@ import ecell.ecs
 import ecell.emc
 from ecell.Session import Session, createScriptContext
 
-def FullID_matcher( prefix, session ):
+def FullID_matcher( event, session ):
+    prefix = event.line.split( "'" )[ -1 ]
+    prefix = prefix.split( '"' )[ -1 ]
     return [ id for id in session.getModelEntityList() if id.startswith( prefix ) ]
 
 def load_ipython_extension( ipython ):
@@ -53,7 +55,10 @@ def load_ipython_extension( ipython ):
     
     def FullID_completer( self, event ):
         # Completer for createLoggerStub
-        return FullID_matcher( event.symbol, aSession )
+        
+        return FullID_matcher( event, aSession )
+    
+    # def Session_method_completer( self, event ):
     
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
 
