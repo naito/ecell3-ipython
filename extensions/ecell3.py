@@ -57,17 +57,8 @@ def load_ipython_extension( ipython ):
         # Completer for createLoggerStub
         return FullID_matcher( event, aSession )
     
-    def both_parentheses_completer( self, event ):
-        return [ '()' ]
-    
-    def open_parenthesis_completer( self, event ):
-        return [ '(' ]
-    
-    ipython.set_hook('complete_command', open_parenthesis_completer, re_key = r'.*createLoggerStub')
-
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createEntityStub\(\s*[\'\"]')
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
-
 
 def unload_ipython_extension( ipython ):
     # If you want your extension to be unloadable, put that logic here.
