@@ -84,7 +84,6 @@ def load_ipython_extension( ipython ):
     
     @register_line_magic
     def loadModel( line ):
-        %gui qt
         model_file = model_chooser()
         loadModel( model_file )
         print '{} is loaded.'.format( model_file )
