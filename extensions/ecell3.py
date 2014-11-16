@@ -37,6 +37,28 @@ import ecell.ecs
 import ecell.emc
 from ecell.Session import Session, createScriptContext
 
+from IPython.core.magic import (register_line_magic, register_cell_magic,
+                                register_line_cell_magic)
+
+try:
+    from PySide import QtCore, QtGui
+except ImportError:
+    from PyQt4 import QtCore, QtGui
+
+def model_chooser( dir = None ):
+    """
+    Choose a eml file via a dialog
+    """
+    if dir is None: dir ='./'
+    
+    model_file = QtGui.QFileDialog.getOpenFileName(
+        None,
+        "Choose a model file...", 
+        dir, 
+        filter = "Model files (*.em *.eml)" )
+    
+    return str( model_file )
+
 def FullID_matcher( event, session ):
     prefix = event.line.split( "'" )[ -1 ]
     prefix = prefix.split( '"' )[ -1 ]
@@ -59,6 +81,15 @@ def load_ipython_extension( ipython ):
     
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createEntityStub\(\s*[\'\"]')
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
+    
+    @register_line_magic
+    def loadModel( line ):
+        %gui qt
+        model_file = model_chooser()
+        loadModel( model_file )
+        print '{} is loaded.'.format( model_file )
+
+
 
 def unload_ipython_extension( ipython ):
     # If you want your extension to be unloadable, put that logic here.
