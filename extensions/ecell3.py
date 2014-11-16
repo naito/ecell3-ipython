@@ -82,8 +82,8 @@ def load_ipython_extension( ipython ):
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createEntityStub\(\s*[\'\"]')
     ipython.set_hook('complete_command', FullID_completer, re_key = r'.*createLoggerStub\(\s*[\'\"]')
     
-    @register_cell_magic
-    def loadModel( line, cell ):
+    @register_line_magic
+    def loadModel( line ):
         model_file = model_chooser()
         loadModel( model_file )
         print '{} is loaded.'.format( model_file )
