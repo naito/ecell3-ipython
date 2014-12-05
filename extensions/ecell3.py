@@ -32,6 +32,8 @@ END_HEADER
  E-Cell Project.
 """
 
+import sys
+
 import ecell.config
 import ecell.ecs
 import ecell.emc
@@ -40,10 +42,12 @@ from ecell.Session import Session, createScriptContext
 from IPython.core.magic import (register_line_magic, register_cell_magic,
                                 register_line_cell_magic)
 
-try:
-    from PySide import QtCore, QtGui
-except ImportError:
-    from PyQt4 import QtCore, QtGui
+import IPython.external.qt as qt
+
+#try:
+#    from PySide import QtCore, QtGui
+#except ImportError:
+#    from PyQt4 import QtCore, QtGui
 
 def model_chooser( dir = None ):
     """
@@ -51,11 +55,17 @@ def model_chooser( dir = None ):
     """
     if dir is None: dir ='./'
     
-    model_file = QtGui.QFileDialog.getOpenFileName(
-        None,
-        "Choose a model file...", 
-        dir, 
-        filter = "Model files (*.em *.eml)" )
+#    app=QtGui.QApplication.instance()
+#    if not app:
+#        app = QtGui.QApplication(sys.argv)
+    
+    model_file = qt.QtGui.QFileDialog.getOpenFileName(
+        None,                                     # QWidget parent
+        "Choose a model file...",                 # QString caption
+        dir,                                      # QString directory
+        filter = "Model files (*.em *.eml)" )     # QString filter
+    
+    # QFileDialog.getOpenFileName(QWidget parent=None, QString caption=QString(), QString directory=QString(), QString filter=QString(), QString selectedFilter=None, QFileDialog.Options options=0)
     
     return str( model_file )
 
